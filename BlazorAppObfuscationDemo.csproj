@@ -1,27 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-    <RazorLangVersion>3.0</RazorLangVersion>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <BlazorCacheBootResources>false</BlazorCacheBootResources>
+    <BlazorEnableCompression>false</BlazorEnableCompression>
+  </PropertyGroup>
+	
   <ItemGroup>
-    <PackageReference Include="ArmDot.Client" Version="2021.1.0" />
-    <PackageReference Include="ArmDot.Engine.MSBuildTasks" Version="2021.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="3.2.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Build" Version="3.2.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="3.2.1" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="3.2.0" />
+    <PackageReference Include="ArmDot.Client" Version="2022.5.0" />
+    <PackageReference Include="ArmDot.Engine.MSBuildTasks" Version="2022.5.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.3" PrivateAssets="all" />
   </ItemGroup>
 
-  <Target Name="Protect" AfterTargets="Build">
+  <Target Name="ProtectBeforePublishing" AfterTargets="AfterCompile" BeforeTargets="BeforePublish">
     <ItemGroup>
-      <Assemblies Include="$(TargetDir)$(TargetFileName)" />
+      <Assemblies Include="$(ProjectDir)$(IntermediateOutputPath)$(TargetFileName)" />
     </ItemGroup>
-    <ArmDot.Engine.MSBuildTasks.ObfuscateTask
-      Inputs="@(Assemblies)"
-      ReferencePaths="@(_ResolveAssemblyReferenceResolvedFiles->'%(RootDir)%(Directory)')"
-  />
+    <ArmDot.Engine.MSBuildTasks.ObfuscateTask Inputs="@(Assemblies)" ReferencePaths="@(_ResolveAssemblyReferenceResolvedFiles->'%(RootDir)%(Directory)')" SkipAlreadyObfuscatedAssemblies="true" />
   </Target>
-  
+
 </Project>
